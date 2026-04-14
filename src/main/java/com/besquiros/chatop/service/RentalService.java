@@ -1,13 +1,15 @@
 package com.besquiros.chatop.service;
 
 import com.besquiros.chatop.dto.request.RentalCreateRequest;
-import com.besquiros.chatop.dto.response.RentalResponse;
 import com.besquiros.chatop.dto.request.RentalUpdateRequest;
+import com.besquiros.chatop.dto.response.RentalResponse;
 import com.besquiros.chatop.dto.response.RentalsResponse;
 import com.besquiros.chatop.entity.Rental;
+import com.besquiros.chatop.entity.User;
 import com.besquiros.chatop.exception.NotFoundException;
 import com.besquiros.chatop.mapper.RentalMapper;
 import com.besquiros.chatop.repository.RentalRepository;
+import com.besquiros.chatop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class RentalService {
 
     private final RentalRepository rentalRepository;
+    private final UserRepository userRepository;
     private final RentalMapper rentalMapper;
 
     public RentalsResponse findAll() {
@@ -35,7 +38,9 @@ public class RentalService {
     }
 
     public void create(RentalCreateRequest request) {
-        rentalRepository.save(rentalMapper.toEntity(request));
+        User owner = userRepository.findById(request.getOwnerId())
+                .orElseThrow(() -> new NotFoundException("Owner not found"));
+        rentalRepository.save(rentalMapper.toEntity(request, owner));
     }
 
     public void update(Long id, RentalUpdateRequest request) {

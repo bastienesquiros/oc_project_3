@@ -25,8 +25,9 @@ public class Rental {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "owner_id")
-    private Long ownerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
