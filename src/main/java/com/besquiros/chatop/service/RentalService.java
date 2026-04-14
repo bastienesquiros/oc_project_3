@@ -12,8 +12,14 @@ import com.besquiros.chatop.repository.RentalRepository;
 import com.besquiros.chatop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +28,9 @@ public class RentalService {
     private final RentalRepository rentalRepository;
     private final UserRepository userRepository;
     private final RentalMapper rentalMapper;
+
+    private static final String UPLOAD_DIR = "uploads/";
+    private static final String UPLOAD_URL = "http://localhost:8080/";
 
     public RentalsResponse findAll() {
         List<RentalResponse> rentals = rentalRepository.findAll()
@@ -37,10 +46,11 @@ public class RentalService {
                 .orElseThrow(() -> new NotFoundException("Rental not found"));
     }
 
-    public void create(RentalCreateRequest request) {
-        User owner = userRepository.findById(request.getOwnerId())
+    public void create(RentalCreateRequest request, MultipartFile picture, String ownerEmail) {
+        User owner = userRepository.findByEmail(ownerEmail)
                 .orElseThrow(() -> new NotFoundException("Owner not found"));
-        rentalRepository.save(rentalMapper.toEntity(request, owner));
+        String picturePath = savePicture(picture);
+        rentalRepository.save(rentalMapper.toEntity(request, owner, picturePath));
     }
 
     public void update(Long id, RentalUpdateRequest request) {
@@ -48,5 +58,18 @@ public class RentalService {
                 .orElseThrow(() -> new NotFoundException("Rental not found"));
         rentalMapper.applyUpdate(rental, request);
         rentalRepository.save(rental);
+    }
+
+    private String savePicture(MultipartFile file) {
+        if (file == null || file.isEmpty()) return null;
+        try {
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Files.copy(file.getInputStream(), uploadPath.resolve(filename));
+            return UPLOAD_URL + UPLOAD_DIR + filename;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save picture", e);
+        }
     }
 }

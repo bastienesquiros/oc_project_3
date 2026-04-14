@@ -1,17 +1,21 @@
 package com.besquiros.chatop.controller;
 
-import com.besquiros.chatop.dto.response.MessageResponse;
 import com.besquiros.chatop.dto.request.RentalCreateRequest;
-import com.besquiros.chatop.dto.response.RentalResponse;
 import com.besquiros.chatop.dto.request.RentalUpdateRequest;
+import com.besquiros.chatop.dto.response.MessageResponse;
+import com.besquiros.chatop.dto.response.RentalResponse;
 import com.besquiros.chatop.dto.response.RentalsResponse;
 import com.besquiros.chatop.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/rentals")
@@ -34,9 +38,12 @@ public class RentalController {
     }
 
     @Operation(summary = "Create a rental")
-    @PostMapping
-    public ResponseEntity<MessageResponse> create(@Valid @RequestBody RentalCreateRequest request) {
-        rentalService.create(request);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MessageResponse> create(
+            @Valid @ModelAttribute RentalCreateRequest request,
+            @RequestParam(required = false) MultipartFile picture,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        rentalService.create(request, picture, userDetails.getUsername());
         return ResponseEntity.ok(new MessageResponse("Rental created !"));
     }
 

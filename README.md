@@ -28,7 +28,6 @@ Puis exécuter `src/main/resources/sql/schema.sql` dans votre client MySQL via *
 spring.datasource.url=jdbc:mysql://localhost:3306/chatop_db
 spring.datasource.username=YOUR_USERNAME
 spring.datasource.password=YOUR_PASSWORD
-spring.jpa.hibernate.ddl-auto=validate
 
 jwt.secret=YOUR_BASE64_SECRET
 jwt.expiration=86400000
@@ -45,3 +44,6 @@ L'API est disponible sur `http://localhost:8080`.
 ## Swagger
 
 Documentation interactive : `http://localhost:8080/swagger-ui.html`
+
+## Idées
+- Intégrer Flyway

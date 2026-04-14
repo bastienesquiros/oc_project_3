@@ -24,12 +24,12 @@ public class RentalMapper {
         );
     }
 
-    public Rental toEntity(RentalCreateRequest request, User owner) {
+    public Rental toEntity(RentalCreateRequest request, User owner, String picturePath) {
         Rental rental = new Rental();
         rental.setName(request.getName());
         rental.setSurface(request.getSurface());
         rental.setPrice(request.getPrice());
-        rental.setPicture(request.getPicture());
+        rental.setPicture(picturePath);
         rental.setDescription(request.getDescription());
         rental.setOwner(owner);
         return rental;
