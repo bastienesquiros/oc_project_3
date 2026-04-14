@@ -46,10 +46,7 @@ public class RentalService {
     public void update(Long id, RentalUpdateRequest request) {
         Rental rental = rentalRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Rental not found"));
-        if (request.getName() != null) rental.setName(request.getName());
-        if (request.getSurface() != null) rental.setSurface(request.getSurface());
-        if (request.getPrice() != null) rental.setPrice(request.getPrice());
-        if (request.getDescription() != null) rental.setDescription(request.getDescription());
+        rentalMapper.applyUpdate(rental, request);
         rentalRepository.save(rental);
     }
 }

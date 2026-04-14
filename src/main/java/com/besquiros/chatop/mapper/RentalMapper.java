@@ -1,6 +1,7 @@
 package com.besquiros.chatop.mapper;
 
 import com.besquiros.chatop.dto.request.RentalCreateRequest;
+import com.besquiros.chatop.dto.request.RentalUpdateRequest;
 import com.besquiros.chatop.dto.response.RentalResponse;
 import com.besquiros.chatop.entity.Rental;
 import com.besquiros.chatop.entity.User;
@@ -32,5 +33,12 @@ public class RentalMapper {
         rental.setDescription(request.getDescription());
         rental.setOwner(owner);
         return rental;
+    }
+
+    public void applyUpdate(Rental rental, RentalUpdateRequest request) {
+        rental.setName(request.getName());
+        rental.setSurface(request.getSurface());
+        rental.setPrice(request.getPrice());
+        rental.setDescription(request.getDescription());
     }
 }
