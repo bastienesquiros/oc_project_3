@@ -6,8 +6,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
-public class RentalCreateRequest {
-
+public class RentalRequest {
     @NotBlank
     private String name;
 

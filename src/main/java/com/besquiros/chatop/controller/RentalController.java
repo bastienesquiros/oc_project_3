@@ -1,7 +1,6 @@
 package com.besquiros.chatop.controller;
 
-import com.besquiros.chatop.dto.request.RentalCreateRequest;
-import com.besquiros.chatop.dto.request.RentalUpdateRequest;
+import com.besquiros.chatop.dto.request.RentalRequest;
 import com.besquiros.chatop.dto.response.MessageResponse;
 import com.besquiros.chatop.dto.response.RentalResponse;
 import com.besquiros.chatop.dto.response.RentalsResponse;
@@ -40,7 +39,7 @@ public class RentalController {
     @Operation(summary = "Create a rental")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MessageResponse> create(
-            @Valid @ModelAttribute RentalCreateRequest request,
+            @Valid @ModelAttribute RentalRequest request,
             @RequestParam(required = false) MultipartFile picture,
             @AuthenticationPrincipal UserDetails userDetails) {
         rentalService.create(request, picture, userDetails.getUsername());
@@ -49,7 +48,7 @@ public class RentalController {
 
     @Operation(summary = "Update a rental")
     @PutMapping("/{id}")
-    public ResponseEntity<MessageResponse> update(@PathVariable Long id, @Valid @RequestBody RentalUpdateRequest request) {
+    public ResponseEntity<MessageResponse> update(@PathVariable Long id, @Valid @ModelAttribute RentalRequest request) {
         rentalService.update(id, request);
         return ResponseEntity.ok(new MessageResponse("Rental updated !"));
     }

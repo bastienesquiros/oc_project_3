@@ -1,7 +1,6 @@
 package com.besquiros.chatop.service;
 
-import com.besquiros.chatop.dto.request.RentalCreateRequest;
-import com.besquiros.chatop.dto.request.RentalUpdateRequest;
+import com.besquiros.chatop.dto.request.RentalRequest;
 import com.besquiros.chatop.dto.response.RentalResponse;
 import com.besquiros.chatop.dto.response.RentalsResponse;
 import com.besquiros.chatop.entity.Rental;
@@ -46,14 +45,14 @@ public class RentalService {
                 .orElseThrow(() -> new NotFoundException("Rental not found"));
     }
 
-    public void create(RentalCreateRequest request, MultipartFile picture, String ownerEmail) {
+    public void create(RentalRequest request, MultipartFile picture, String ownerEmail) {
         User owner = userRepository.findByEmail(ownerEmail)
                 .orElseThrow(() -> new NotFoundException("Owner not found"));
         String picturePath = savePicture(picture);
         rentalRepository.save(rentalMapper.toEntity(request, owner, picturePath));
     }
 
-    public void update(Long id, RentalUpdateRequest request) {
+    public void update(Long id, RentalRequest request) {
         Rental rental = rentalRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Rental not found"));
         rentalMapper.applyUpdate(rental, request);

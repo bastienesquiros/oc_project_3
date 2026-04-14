@@ -9,11 +9,13 @@ import lombok.Data;
 public class MessageRequest {
 
     @NotNull
+    @JsonProperty("user_id")
     private Long userId;
 
     @NotBlank
     private String message;
 
     @NotNull
+    @JsonProperty("rental_id")
     private Long rentalId;
 }
