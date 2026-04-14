@@ -34,3 +34,7 @@ build/
 
 ### Misc ###
 src/main/resources/application-dev.properties
+
+### Uploads ###
+uploads/*
+!uploads/.gitkeep
