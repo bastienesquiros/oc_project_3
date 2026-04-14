@@ -7,6 +7,7 @@ import com.besquiros.chatop.dto.request.RentalUpdateRequest;
 import com.besquiros.chatop.dto.response.RentalsResponse;
 import com.besquiros.chatop.service.RentalService;
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +29,13 @@ public class RentalController {
     }
 
     @PostMapping
-    public ResponseEntity<MessageResponse> create(@RequestBody RentalCreateRequest request) {
+    public ResponseEntity<MessageResponse> create(@Valid @RequestBody RentalCreateRequest request) {
         rentalService.create(request);
         return ResponseEntity.ok(new MessageResponse("Rental created !"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MessageResponse> update(@PathVariable Long id, @RequestBody RentalUpdateRequest request) {
+    public ResponseEntity<MessageResponse> update(@PathVariable Long id, @Valid @RequestBody RentalUpdateRequest request) {
         rentalService.update(id, request);
         return ResponseEntity.ok(new MessageResponse("Rental updated !"));
     }

@@ -5,8 +5,11 @@ import com.besquiros.chatop.dto.request.LoginRequest;
 import com.besquiros.chatop.dto.request.RegisterRequest;
 import com.besquiros.chatop.dto.response.UserResponse;
 import com.besquiros.chatop.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,21 +20,17 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    /**
-     * Placeholder — will return the current user from JWT once Spring Security is fully configured.
-     * For now, requires a userId query parameter.
-     */
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(@RequestParam Long userId) {
-        return ResponseEntity.ok(authService.me(userId));
+    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(authService.me(userDetails.getUsername()));
     }
 }

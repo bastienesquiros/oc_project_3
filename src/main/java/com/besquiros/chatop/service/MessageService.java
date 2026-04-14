@@ -1,7 +1,7 @@
 package com.besquiros.chatop.service;
 
 import com.besquiros.chatop.dto.request.MessageRequest;
-import com.besquiros.chatop.entity.Message;
+import com.besquiros.chatop.mapper.MessageMapper;
 import com.besquiros.chatop.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,12 +11,9 @@ import org.springframework.stereotype.Service;
 public class MessageService {
 
     private final MessageRepository messageRepository;
+    private final MessageMapper messageMapper;
 
     public void create(MessageRequest request) {
-        Message message = new Message();
-        message.setUserId(request.getUserId());
-        message.setRentalId(request.getRentalId());
-        message.setMessage(request.getMessage());
-        messageRepository.save(message);
+        messageRepository.save(messageMapper.toEntity(request));
     }
 }

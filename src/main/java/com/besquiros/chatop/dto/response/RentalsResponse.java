@@ -1,12 +1,5 @@
 package com.besquiros.chatop.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-public class RentalsResponse {
-    private List<RentalResponse> rentals;
-}
+public record RentalsResponse(List<RentalResponse> rentals) {}
