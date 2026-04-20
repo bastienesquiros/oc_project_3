@@ -10,6 +10,7 @@ import com.besquiros.chatop.mapper.RentalMapper;
 import com.besquiros.chatop.repository.RentalRepository;
 import com.besquiros.chatop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +29,10 @@ public class RentalService {
     private final UserRepository userRepository;
     private final RentalMapper rentalMapper;
 
-    private static final String UPLOAD_DIR = "uploads/";
-    private static final String UPLOAD_URL = "http://localhost:8080/";
+    @Value("${app.upload.dir}")
+    private String uploadDir;
+
+    private static final String UPLOAD_URL = "http://localhost:8080/uploads/";
 
     public RentalsResponse findAll() {
         List<RentalResponse> rentals = rentalRepository.findAll()
@@ -62,11 +65,11 @@ public class RentalService {
     private String savePicture(MultipartFile file) {
         if (file == null || file.isEmpty()) return null;
         try {
-            Path uploadPath = Paths.get(UPLOAD_DIR);
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
             if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Files.copy(file.getInputStream(), uploadPath.resolve(filename));
-            return UPLOAD_URL + UPLOAD_DIR + filename;
+            return UPLOAD_URL + filename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to save picture", e);
         }
